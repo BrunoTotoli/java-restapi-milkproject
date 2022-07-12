@@ -1,7 +1,10 @@
 package com.bruno.springmyproject.entity;
 
 import com.bruno.springmyproject.entity.enums.PeriodTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,6 +12,9 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "tb_milk")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Milk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
