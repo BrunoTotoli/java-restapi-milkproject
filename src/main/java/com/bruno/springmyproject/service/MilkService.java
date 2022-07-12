@@ -6,6 +6,7 @@ import com.bruno.springmyproject.repository.MilkRepository;
 import com.bruno.springmyproject.request.MilkPostRequestBody;
 import com.bruno.springmyproject.request.MilkPutRequestBody;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
+@Log4j2
 public class MilkService {
 
     private MilkRepository milkRepository;

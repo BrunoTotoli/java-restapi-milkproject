@@ -4,7 +4,7 @@ import com.bruno.springmyproject.entity.enums.PeriodTime;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -15,5 +15,6 @@ public class Milk {
     private Long id;
     private Double quantity;
     private PeriodTime periodTime;
-    private LocalDateTime date;
+    private LocalDate date;
+
 }

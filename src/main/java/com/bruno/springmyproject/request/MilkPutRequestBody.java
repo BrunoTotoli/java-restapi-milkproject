@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +14,5 @@ public class MilkPutRequestBody {
     private Long id;
     private Double quantity;
     private PeriodTime periodTime;
-    private LocalDateTime date;
+    private LocalDate date;
 }
