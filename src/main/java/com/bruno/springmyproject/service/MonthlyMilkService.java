@@ -13,9 +13,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -28,34 +28,7 @@ public class MonthlyMilkService {
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    public List<Milk> getMilkListByDayYearAndMonth(String date) {
-        String[] splitDate = date.split(",");
-        StringBuilder formatedString = new StringBuilder();
-
-
-        for (int i = 0; i < splitDate.length; i++) {
-
-            if (i != splitDate.length - 1) {
-                formatedString.append(splitDate[i]).append("/");
-            } else {
-                formatedString.append(splitDate[i]);
-            }
-        }
-
-        try {
-            Date parsedDate = sdf.parse(formatedString.toString());
-            LocalDate localDateTime = parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            return milkRepository.findByDate(localDateTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return Collections.emptyList();
-
-    }
-
     public List<Milk> getMilkListByYearAndMonth(int month, int year) {
-
         MonthlyMilk monthlyMilk = new MonthlyMilk();
         monthlyMilk.setMilkMonth(month);
         monthlyMilk.setMilkYear(year);
@@ -87,14 +60,16 @@ public class MonthlyMilkService {
                 e.printStackTrace();
             }
         }
-
-
         milkRepository.saveAll(milkListMonthYear);
-
-
         return milkListMonthYear;
 
     }
+
+    public MonthlyMilk findById(Long id) {
+        Optional<MonthlyMilk> optionalMonthlyMilk = monthlyMilkRepository.findById(id);
+        return optionalMonthlyMilk.orElseThrow();
+    }
+
 
     private void filterList(MonthlyMilk savedMonthlyMilk, List<Milk> milkListMonthYear, List<Milk> byDate) {
         List<Milk> filterList = byDate.stream().filter(p -> p.getMonthlyMilk() == null).toList();

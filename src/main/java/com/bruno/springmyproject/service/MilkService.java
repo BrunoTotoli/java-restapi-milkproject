@@ -9,6 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,5 +46,27 @@ public class MilkService {
 
     public void delete(Long id) {
         milkRepository.deleteById(id);
+    }
+
+    public List<Milk> getMilkListByDayYearAndMonth(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String[] splitDate = date.split(",");
+        StringBuilder formatedString = new StringBuilder();
+
+        for (int i = 0; i < splitDate.length; i++) {
+            if (i != splitDate.length - 1) {
+                formatedString.append(splitDate[i]).append("/");
+            } else {
+                formatedString.append(splitDate[i]);
+            }
+        }
+        try {
+            Date parsedDate = sdf.parse(formatedString.toString());
+            LocalDate localDateTime = parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            return milkRepository.findByDate(localDateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 }

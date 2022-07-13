@@ -2,6 +2,7 @@ package com.bruno.springmyproject.controller;
 
 
 import com.bruno.springmyproject.entity.Milk;
+import com.bruno.springmyproject.entity.MonthlyMilk;
 import com.bruno.springmyproject.service.MonthlyMilkService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,13 +22,14 @@ public class MonthlyMilkController {
 
     private MonthlyMilkService monthlyMilkService;
 
-    @GetMapping("/{date}")
-    public ResponseEntity<List<Milk>> findByYearAndMonth(@PathVariable String date) {
-        return ResponseEntity.ok().body(monthlyMilkService.getMilkListByDayYearAndMonth(date));
-    }
-
     @GetMapping("/{month}/{year}")
-    public ResponseEntity<List<Milk>> find(@PathVariable Integer month, @PathVariable Integer year) {
+    public ResponseEntity<List<Milk>> findByYearAndMonth(@PathVariable Integer month, @PathVariable Integer year) {
         return ResponseEntity.ok().body(monthlyMilkService.getMilkListByYearAndMonth(month, year));
     }
+
+    @GetMapping("list/{id}")
+    public ResponseEntity<MonthlyMilk> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(monthlyMilkService.findById(id));
+    }
+
 }
