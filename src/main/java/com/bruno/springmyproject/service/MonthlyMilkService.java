@@ -3,6 +3,7 @@ package com.bruno.springmyproject.service;
 import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
 import com.bruno.springmyproject.repository.MilkRepository;
+import com.bruno.springmyproject.repository.MonthlyMilkRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ import java.util.List;
 public class MonthlyMilkService {
 
     private MilkRepository milkRepository;
+
+    private MonthlyMilkRepository monthlyMilkRepository;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -54,8 +57,13 @@ public class MonthlyMilkService {
     public List<Milk> getMilkListByYearAndMonth(int month, int year) {
 
         MonthlyMilk monthlyMilk = new MonthlyMilk();
-        monthlyMilk.setMonth(month);
-        monthlyMilk.setYear(year);
+        monthlyMilk.setMilkMonth(month);
+        monthlyMilk.setMilkYear(year);
+
+        if (monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year) != null) {
+            monthlyMilk.setId(monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year).getId());
+        }
+        MonthlyMilk savedMonthlyMilk = monthlyMilkRepository.save(monthlyMilk);
 
         List<Milk> milkListMonthYear = new ArrayList<>();
 
@@ -69,23 +77,33 @@ public class MonthlyMilkService {
                     if (i == 31) {
                         for (int y = 0; i < byDate.size(); y++) {
                             if (byDate.get(y).getDate().getMonth().getValue() == month) {
-                                milkListMonthYear.addAll(byDate);
+                                filterList(savedMonthlyMilk, milkListMonthYear, byDate);
                             }
                         }
                     }
-                    milkListMonthYear.addAll(byDate);
-
-
+                    filterList(savedMonthlyMilk, milkListMonthYear, byDate);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
-        monthlyMilk.setMilkList(milkListMonthYear);
 
-        return monthlyMilk.getMilkList();
+        milkRepository.saveAll(milkListMonthYear);
 
+
+        return milkListMonthYear;
+
+    }
+
+    private void filterList(MonthlyMilk savedMonthlyMilk, List<Milk> milkListMonthYear, List<Milk> byDate) {
+        List<Milk> filterList = byDate.stream().filter(p -> p.getMonthlyMilk() == null).toList();
+        filterList.forEach(p -> p.setMonthlyMilk(savedMonthlyMilk));
+        if (filterList.isEmpty()) {
+            milkListMonthYear.addAll(byDate);
+        } else {
+            milkListMonthYear.addAll(filterList);
+        }
     }
 
 }

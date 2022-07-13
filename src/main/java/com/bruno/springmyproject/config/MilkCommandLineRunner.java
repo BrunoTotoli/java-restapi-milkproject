@@ -3,6 +3,7 @@ package com.bruno.springmyproject.config;
 import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.enums.PeriodTime;
 import com.bruno.springmyproject.repository.MilkRepository;
+import com.bruno.springmyproject.repository.MonthlyMilkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +18,16 @@ public class MilkCommandLineRunner implements CommandLineRunner {
     @Autowired
     MilkRepository milkRepository;
 
+    @Autowired
+    MonthlyMilkRepository monthlyMilkRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
         List<Milk> milksToBeSave = createFullDaysMonthWithRandomQuantities(7, 2022);
+        List<Milk> milksToBeSave2 = createFullDaysMonthWithRandomQuantities(8, 2022);
         milkRepository.saveAll(milksToBeSave);
+        milkRepository.saveAll(milksToBeSave2);
     }
 
     private List<Milk> createFullDaysMonthWithRandomQuantities(int month, int year) {

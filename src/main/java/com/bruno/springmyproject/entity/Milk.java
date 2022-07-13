@@ -1,6 +1,7 @@
 package com.bruno.springmyproject.entity;
 
 import com.bruno.springmyproject.entity.enums.PeriodTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,8 @@ public class Milk {
     private PeriodTime periodTime;
     private LocalDate date;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "monthly_id")
+    private MonthlyMilk monthlyMilk;
 }
