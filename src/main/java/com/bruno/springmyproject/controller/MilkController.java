@@ -46,10 +46,4 @@ public class MilkController {
         milkService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @GetMapping("/date/{date}")
-    public ResponseEntity<List<Milk>> findByDayYearAndMonthSplitWithComma(@PathVariable String date) {
-        return ResponseEntity.ok().body(milkService.getMilkListByDayYearAndMonth(date));
-    }
-
 }

@@ -20,6 +20,7 @@ public class MonthlyMilk {
     private Long id;
     private Integer milkMonth;
     private Integer milkYear;
+    private Double milkMonthPrice;
 
     @OneToMany(mappedBy = "monthlyMilk", cascade = CascadeType.ALL)
     private List<Milk> milkList;

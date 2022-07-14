@@ -44,7 +44,6 @@ public class MilkCommandLineRunner implements CommandLineRunner {
         }
         return milkList;
     }
-
     private Integer getRandomNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }

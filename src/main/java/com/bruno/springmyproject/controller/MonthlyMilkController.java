@@ -24,7 +24,12 @@ public class MonthlyMilkController {
 
     @GetMapping("/{month}/{year}")
     public ResponseEntity<List<Milk>> findByYearAndMonth(@PathVariable Integer month, @PathVariable Integer year) {
-        return ResponseEntity.ok().body(monthlyMilkService.getMilkListByYearAndMonth(month, year));
+        return ResponseEntity.ok().body(monthlyMilkService.findMilkListByMonthAndYear(month, year));
+    }
+
+    @GetMapping("/string/{date}")
+    public ResponseEntity<List<Milk>> findByDayYearAndMonth(@PathVariable String date) {
+        return ResponseEntity.ok().body(monthlyMilkService.findMilkListByDayYearAndMonth(date));
     }
 
     @GetMapping("list/{id}")

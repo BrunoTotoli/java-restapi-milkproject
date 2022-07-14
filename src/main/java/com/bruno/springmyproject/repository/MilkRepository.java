@@ -14,4 +14,6 @@ public interface MilkRepository extends JpaRepository<Milk, Long> {
 
     List<Milk> findByPeriodTime(PeriodTime periodTime);
 
+    List<Milk> findByDateBetween(LocalDate start,LocalDate end);
+
 }

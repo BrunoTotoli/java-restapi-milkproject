@@ -1,20 +1,16 @@
 package com.bruno.springmyproject.service;
 
 import com.bruno.springmyproject.entity.Milk;
+import com.bruno.springmyproject.entity.MonthlyMilk;
 import com.bruno.springmyproject.mapper.MilkMapper;
 import com.bruno.springmyproject.repository.MilkRepository;
+import com.bruno.springmyproject.repository.MonthlyMilkRepository;
 import com.bruno.springmyproject.request.MilkPostRequestBody;
 import com.bruno.springmyproject.request.MilkPutRequestBody;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +20,24 @@ import java.util.Optional;
 public class MilkService {
 
     private MilkRepository milkRepository;
-
-    public List<Milk> findAll() {
-        return milkRepository.findAll();
-    }
+    private MonthlyMilkRepository monthlyMilkRepository;
 
     public Milk save(MilkPostRequestBody milkPostRequestBody) {
-        return milkRepository.save(MilkMapper.INSTANCE.milkPostRequestBodyToMilk(milkPostRequestBody));
+
+        Milk milkToBeSaved = MilkMapper.INSTANCE.milkPostRequestBodyToMilk(milkPostRequestBody);
+        int month = milkToBeSaved.getDate().getMonth().getValue();
+        int year = milkToBeSaved.getDate().getYear();
+
+        MonthlyMilk monthly = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
+
+        if (monthly != null) {
+            milkToBeSaved.setMonthlyMilk(monthly);
+        } else {
+            monthly = new MonthlyMilk(null, month, year, null, null);
+            monthlyMilkRepository.save(monthly);
+            milkToBeSaved.setMonthlyMilk(monthly);
+        }
+        return milkRepository.save(milkToBeSaved);
     }
 
     public Milk findById(Long id) {
@@ -48,25 +55,8 @@ public class MilkService {
         milkRepository.deleteById(id);
     }
 
-    public List<Milk> getMilkListByDayYearAndMonth(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String[] splitDate = date.split(",");
-        StringBuilder formatedString = new StringBuilder();
-
-        for (int i = 0; i < splitDate.length; i++) {
-            if (i != splitDate.length - 1) {
-                formatedString.append(splitDate[i]).append("/");
-            } else {
-                formatedString.append(splitDate[i]);
-            }
-        }
-        try {
-            Date parsedDate = sdf.parse(formatedString.toString());
-            LocalDate localDateTime = parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            return milkRepository.findByDate(localDateTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return Collections.emptyList();
+    public List<Milk> findAll() {
+        return milkRepository.findAll();
     }
+
 }
