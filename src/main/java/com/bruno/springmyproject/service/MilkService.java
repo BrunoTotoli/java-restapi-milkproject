@@ -7,10 +7,14 @@ import com.bruno.springmyproject.repository.MilkRepository;
 import com.bruno.springmyproject.repository.MonthlyMilkRepository;
 import com.bruno.springmyproject.request.MilkPostRequestBody;
 import com.bruno.springmyproject.request.MilkPutRequestBody;
+import com.bruno.springmyproject.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +37,7 @@ public class MilkService {
         if (monthly != null) {
             milkToBeSaved.setMonthlyMilk(monthly);
         } else {
-            monthly = new MonthlyMilk(null, month, year, null, null);
+            monthly = new MonthlyMilk(null, month, year, null, null, null);
             monthlyMilkRepository.save(monthly);
             milkToBeSaved.setMonthlyMilk(monthly);
         }
@@ -57,6 +61,22 @@ public class MilkService {
 
     public List<Milk> findAll() {
         return milkRepository.findAll();
+    }
+
+    public List<Milk> findMilkListByMonthAndYear(int month, int year) {
+        LocalDate localDateStart = LocalDate.of(year, month, 1);
+        LocalDate localDateEnd = LocalDate.of(year, month, 31);
+        return milkRepository.findByDateBetween(localDateStart, localDateEnd);
+    }
+
+    public List<Milk> findMilkListByDayYearAndMonth(String date) {
+        try {
+            LocalDate localDate = DateUtil.convertStringToLocalDate(date);
+            return milkRepository.findByDate(localDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
 }

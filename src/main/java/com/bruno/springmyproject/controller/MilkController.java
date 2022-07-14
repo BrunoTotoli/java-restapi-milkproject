@@ -19,7 +19,7 @@ public class MilkController {
 
     private MilkService milkService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<Milk>> findAll() {
         return new ResponseEntity<>(milkService.findAll(), HttpStatus.OK);
     }
@@ -46,4 +46,15 @@ public class MilkController {
         milkService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/date")
+    public ResponseEntity<List<Milk>> findByYearAndMonth(@RequestParam Integer month, @RequestParam Integer year) {
+        return ResponseEntity.ok().body(milkService.findMilkListByMonthAndYear(month, year));
+    }
+
+    @GetMapping("/fulldate")
+    public ResponseEntity<List<Milk>> findByDayYearAndMonth(@RequestParam String date) {
+        return ResponseEntity.ok().body(milkService.findMilkListByDayYearAndMonth(date));
+    }
+
 }
