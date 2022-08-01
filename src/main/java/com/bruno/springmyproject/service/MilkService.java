@@ -29,18 +29,26 @@ public class MilkService {
     public Milk save(MilkPostRequestBody milkPostRequestBody) {
 
         Milk milkToBeSaved = MilkMapper.INSTANCE.milkPostRequestBodyToMilk(milkPostRequestBody);
+
         int month = milkToBeSaved.getDate().getMonth().getValue();
         int year = milkToBeSaved.getDate().getYear();
 
         MonthlyMilk monthly = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
 
-        if (monthly != null) {
+        if (monthly != null)
             milkToBeSaved.setMonthlyMilk(monthly);
-        } else {
-            monthly = new MonthlyMilk(null, month, year, null, null, null);
-            monthlyMilkRepository.save(monthly);
-            milkToBeSaved.setMonthlyMilk(monthly);
-        }
+        else
+            monthly = new MonthlyMilk(null, month, year, null, null, null, null);
+
+
+        if (monthly.getAllMilkQuantityInMonth() == null)
+            monthly.setAllMilkQuantityInMonth(milkToBeSaved.getQuantity());
+        else
+            monthly.setAllMilkQuantityInMonth(monthly.getAllMilkQuantityInMonth() + milkToBeSaved.getQuantity());
+
+
+        monthlyMilkRepository.save(monthly);
+        milkToBeSaved.setMonthlyMilk(monthly);
         return milkRepository.save(milkToBeSaved);
     }
 

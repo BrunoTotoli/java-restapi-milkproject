@@ -25,8 +25,12 @@ public class MilkCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        MonthlyMilk monthlyMilk7 = new MonthlyMilk(null, 7, 2022, null, null, null);
-        MonthlyMilk monthlyMilk8 = new MonthlyMilk(null, 8, 2022, null, null, null);
+//        insertAllData();
+    }
+
+    private void insertAllData() {
+        MonthlyMilk monthlyMilk7 = new MonthlyMilk(null, 7, 2022, 2D, null, null, null);
+        MonthlyMilk monthlyMilk8 = new MonthlyMilk(null, 8, 2022, 3D, null, null, null);
         monthlyMilkRepository.save(monthlyMilk7);
         monthlyMilkRepository.save(monthlyMilk8);
         List<Milk> milksToBeSave = createFullDaysMonthWithRandomQuantities(7, 2022, monthlyMilk7);
@@ -34,6 +38,7 @@ public class MilkCommandLineRunner implements CommandLineRunner {
         milkRepository.saveAll(milksToBeSave);
         milkRepository.saveAll(milksToBeSave2);
     }
+
 
     private List<Milk> createFullDaysMonthWithRandomQuantities(int month, int year, MonthlyMilk monthlyMilk) {
         List<Milk> milkList = new ArrayList<>();

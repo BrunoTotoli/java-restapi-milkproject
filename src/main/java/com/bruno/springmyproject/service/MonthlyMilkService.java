@@ -1,7 +1,6 @@
 package com.bruno.springmyproject.service;
 
 
-import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
 import com.bruno.springmyproject.repository.MonthlyMilkRepository;
 import lombok.AllArgsConstructor;
@@ -33,18 +32,12 @@ public class MonthlyMilkService {
 
     public MonthlyMilk savePriceMonthMilkAndSum(int month, int year, Double priceMonthMilk) {
         MonthlyMilk monthlyMilk = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
-
         if (monthlyMilk.getMilkMonthPrice() == null) {
-            List<Milk> milkList = monthlyMilk.getMilkList();
-            double quantitySum = milkList.stream()
-                    .mapToDouble(Milk::getQuantity)
-                    .sum();
-            monthlyMilk.setAllMilkQuantityInMonth(quantitySum);
             monthlyMilk.setMilkMonthPrice(priceMonthMilk);
-            monthlyMilkRepository.save(monthlyMilk);
-            return monthlyMilk;
+            monthlyMilk.setAllMilkQuantityInMonthPriceValue(monthlyMilk.getMilkMonthPrice() * monthlyMilk.getAllMilkQuantityInMonth());
+            return monthlyMilkRepository.save(monthlyMilk);
         }
-        return monthlyMilk;
+        return monthlyMilkRepository.save(monthlyMilk);
 
 
     }
