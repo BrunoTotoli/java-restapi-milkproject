@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class MilkPostRequestBody {
-
     private Double quantity;
     private PeriodTime periodTime;
     private LocalDate date;

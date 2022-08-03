@@ -2,6 +2,7 @@ package com.bruno.springmyproject.service;
 
 import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
+import com.bruno.springmyproject.exception.MilkNotFoundException;
 import com.bruno.springmyproject.mapper.MilkMapper;
 import com.bruno.springmyproject.repository.MilkRepository;
 import com.bruno.springmyproject.repository.MonthlyMilkRepository;
@@ -16,7 +17,6 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -53,10 +53,9 @@ public class MilkService {
     }
 
     public Milk findById(Long id) {
-        Optional<Milk> optMilk = milkRepository.findById(id);
-        if (optMilk.isPresent())
-            return optMilk.get();
-        throw new IllegalArgumentException();
+        return milkRepository.findById(id)
+                .orElseThrow(() -> new MilkNotFoundException("Milk not found"));
+
     }
 
     public void replace(MilkPutRequestBody milkPutRequestBody) {
