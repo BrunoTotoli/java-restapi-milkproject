@@ -52,7 +52,7 @@ public class MilkService {
         return milkRepository.save(milkToBeSaved);
     }
 
-    public Milk findById(Long id) {
+    public Milk findByIdOrElseThrowMilkNotFoundException(Long id) {
         return milkRepository.findById(id)
                 .orElseThrow(() -> new MilkNotFoundException("Milk not found"));
 

@@ -26,9 +26,8 @@ public class MilkController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Milk> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(milkService.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(milkService.findByIdOrElseThrowMilkNotFoundException(id), HttpStatus.OK);
     }
-
 
     @PostMapping
     public ResponseEntity<Milk> save(@RequestBody MilkPostRequestBody milkPostRequestBody) {
