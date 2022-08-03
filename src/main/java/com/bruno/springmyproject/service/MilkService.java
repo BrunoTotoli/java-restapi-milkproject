@@ -30,26 +30,27 @@ public class MilkService {
 
         Milk milkToBeSaved = MilkMapper.INSTANCE.milkPostRequestBodyToMilk(milkPostRequestBody);
 
-        int month = milkToBeSaved.getDate().getMonth().getValue();
-        int year = milkToBeSaved.getDate().getYear();
+        if (milkToBeSaved.getDate() != null) {
+            int month = milkToBeSaved.getDate().getMonth().getValue();
+            int year = milkToBeSaved.getDate().getYear();
+            MonthlyMilk monthly = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
 
-        MonthlyMilk monthly = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
+            if (monthly != null)
+                milkToBeSaved.setMonthlyMilk(monthly);
+            else
+                monthly = new MonthlyMilk(null, month, year, null, null, null, null);
 
-        if (monthly != null)
+            if (monthly.getAllMilkQuantityInMonth() == null)
+                monthly.setAllMilkQuantityInMonth(milkToBeSaved.getQuantity());
+            else
+                monthly.setAllMilkQuantityInMonth(monthly.getAllMilkQuantityInMonth() + milkToBeSaved.getQuantity());
+
+
+            monthlyMilkRepository.save(monthly);
             milkToBeSaved.setMonthlyMilk(monthly);
-        else
-            monthly = new MonthlyMilk(null, month, year, null, null, null, null);
-
-
-        if (monthly.getAllMilkQuantityInMonth() == null)
-            monthly.setAllMilkQuantityInMonth(milkToBeSaved.getQuantity());
-        else
-            monthly.setAllMilkQuantityInMonth(monthly.getAllMilkQuantityInMonth() + milkToBeSaved.getQuantity());
-
-
-        monthlyMilkRepository.save(monthly);
-        milkToBeSaved.setMonthlyMilk(monthly);
+        }
         return milkRepository.save(milkToBeSaved);
+
     }
 
     public Milk findByIdOrElseThrowMilkNotFoundException(Long id) {

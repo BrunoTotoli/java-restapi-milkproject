@@ -29,7 +29,7 @@ public class MilkController {
         return new ResponseEntity<>(milkService.findByIdOrElseThrowMilkNotFoundException(id), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Milk> save(@RequestBody MilkPostRequestBody milkPostRequestBody) {
         return new ResponseEntity<>(milkService.save(milkPostRequestBody), HttpStatus.CREATED);
     }
