@@ -1,13 +1,13 @@
 package com.bruno.springmyproject.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Data
-@SuperBuilder
+@Builder
 public class ExceptionDetails {
     private String title;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
