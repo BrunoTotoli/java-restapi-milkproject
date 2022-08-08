@@ -33,9 +33,14 @@ public class MonthlyMilkController {
         return ResponseEntity.ok().body(monthlyMilkService.findMonthlyMilkByMonthAndYear(month, year));
     }
 
-    @PutMapping("/price")
+    @PostMapping("/price")
     public ResponseEntity<MonthlyMilk> saveMonthMilkPrice(@RequestParam Integer month, @RequestParam Integer year, @RequestParam Double price) {
         return ResponseEntity.ok().body(monthlyMilkService.savePriceMonthMilkAndSum(month, year, price));
+    }
+
+    @PutMapping("/price")
+    public ResponseEntity<MonthlyMilk> updateMonthMilkPrice(@RequestParam Integer month, @RequestParam Integer year, @RequestParam Double price) {
+        return ResponseEntity.ok().body(monthlyMilkService.updatePriceMonthMilkAndSum(month, year, price));
     }
 
 

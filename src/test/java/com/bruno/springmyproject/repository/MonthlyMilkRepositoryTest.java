@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
 
+import static com.bruno.springmyproject.util.MonthlyMilkCreator.createValidMonthlyMilk;
+
 @DataJpaTest
 @DisplayName("Tests for Monthly Milk")
 class MonthlyMilkRepositoryTest {
@@ -81,17 +83,6 @@ class MonthlyMilkRepositoryTest {
         Assertions.assertThat(monthlyMilk.getMilkMonth()).isEqualTo(monthlyMilkSaved.getMilkMonth());
         Assertions.assertThat(monthlyMilk.getMilkYear()).isEqualTo(monthlyMilkSaved.getMilkYear());
 
-    }
-
-    private MonthlyMilk createValidMonthlyMilk() {
-        return MonthlyMilk.builder()
-                .milkMonthPrice(4.20D)
-                .milkMonth(12)
-                .milkYear(2022)
-                .milkList(null)
-                .allMilkQuantityInMonth(null)
-                .allMilkQuantityInMonthPriceValue(null)
-                .build();
     }
 
 

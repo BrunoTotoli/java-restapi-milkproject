@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bruno.springmyproject.util.MilkCreator.createValidMilk;
+
 
 @DataJpaTest
 @DisplayName("Tests for milk repository")
@@ -143,14 +145,6 @@ class MilkRepositoryTest {
     }
 
 
-    private static Milk createValidMilk() {
-        return Milk.builder()
-                .monthlyMilk(null)
-                .date(LocalDate.now())
-                .periodTime(PeriodTime.MANHA)
-                .quantity(120D)
-                .id(1L)
-                .build();
-    }
+
 
 }
