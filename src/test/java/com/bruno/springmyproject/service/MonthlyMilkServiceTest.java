@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bruno.springmyproject.util.MonthlyMilkCreator.*;
+import static com.bruno.springmyproject.util.MonthlyMilkCreator.createValidWithMonthPriceMonthlyMilk;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -79,13 +80,18 @@ class MonthlyMilkServiceTest {
     }
 
     @Test
-    @DisplayName("savePriceMonthMilkAndSum returns monthlyMilk with price when successful")
+    @DisplayName("savePriceMonthMilkAndSum returns monthlyMilk and save with price when successful")
     void savePriceMonthMilkAndSum_ReturnsMonthlyMilkWithPrice_WhenSuccessful() {
-        BDDMockito.when(monthlyMilkService.savePriceMonthMilkAndSum(12, 2022, 2.40D))
-                .thenReturn(createValidWithMonthPriceMonthlyMilk());
+
+        BDDMockito.when(monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt()))
+                .thenReturn(createValidFindMonthlyMilkByMilkMonthAndMilkYear());
+
+        BDDMockito.when(monthlyMilkRepository.save(ArgumentMatchers.any()))
+                .thenReturn(createValidSaveMonthlyMilk());
+
 
         MonthlyMilk oldMonthlyMilk = createValidMonthlyMilk();
-        MonthlyMilk monthlyMilkWithPriceAndAllPrice = monthlyMilkService.savePriceMonthMilkAndSum(12, 2022, 2.40D);
+        MonthlyMilk monthlyMilkWithPriceAndAllPrice = monthlyMilkService.savePriceMonthMilkAndSum(12, 2022, 2.20D);
 
         Assertions.assertThat(monthlyMilkWithPriceAndAllPrice)
                 .isNotNull();
@@ -93,23 +99,37 @@ class MonthlyMilkServiceTest {
         Assertions.assertThat(monthlyMilkWithPriceAndAllPrice.getMilkMonthPrice())
                 .isNotNull()
                 .isNotEqualTo(oldMonthlyMilk.getMilkMonthPrice())
-                .isEqualTo(createValidWithMonthPriceMonthlyMilk().getMilkMonthPrice());
+                .isEqualTo(createValidSaveMonthlyMilk().getMilkMonthPrice());
 
         Assertions.assertThat(monthlyMilkWithPriceAndAllPrice.getAllMilkQuantityInMonthPriceValue())
                 .isNotNull()
                 .isNotEqualTo(oldMonthlyMilk.getAllMilkQuantityInMonthPriceValue())
-                .isEqualTo(createValidWithMonthPriceMonthlyMilk().getAllMilkQuantityInMonthPriceValue());
+                .isEqualTo(createValidSaveMonthlyMilk().getAllMilkQuantityInMonthPriceValue());
     }
 
-
     @Test
-    @DisplayName("updatePriceMonthMilkAndSum returns monthlyMilk with updated price when successful")
-    void updatePriceMonthMilkAndSum_ReturnsMonthlyMilkWithPrice_WhenSuccessful() {
+    @DisplayName("savePriceMonthMilkAndSum returns monthlyMilk and non save new price when successful")
+    void savePriceMonthMilkAndSumAndNonSave_ReturnsMonthlyMilkWithPrice_WhenSuccessful() {
         BDDMockito.when(monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt()))
                 .thenReturn(createValidWithMonthPriceMonthlyMilk());
 
-        BDDMockito.when(monthlyMilkService.updatePriceMonthMilkAndSum(12, 2022, 2.80D))
-                .thenReturn(createValidUpdateWithMonthPriceMonthlyMilk());
+        MonthlyMilk monthlyMilkWithPriceAndAllPriceSaved = monthlyMilkService.savePriceMonthMilkAndSum(12, 2022, 2.20D);
+
+        Assertions.assertThat(monthlyMilkWithPriceAndAllPriceSaved)
+                .isNotNull();
+        Assertions.assertThat(monthlyMilkWithPriceAndAllPriceSaved.getMilkMonthPrice())
+                .isNotEqualTo(2.20D)
+                .isEqualTo(createValidWithMonthPriceMonthlyMilk().getMilkMonthPrice());
+
+    }
+
+    @Test
+    @DisplayName("updatePriceMonthMilkAndSum returns monthlyMilk and save with updated price when successful")
+    void updatePriceMonthMilkAndSum_ReturnsMonthlyMilkWithPrice_WhenSuccessful() {
+        BDDMockito.when(monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(12, 2022))
+                .thenReturn(createValidWithMonthPriceMonthlyMilk());
+        BDDMockito.when(monthlyMilkRepository.save(ArgumentMatchers.any()))
+                .thenReturn(createValidUpdatedMonthlyMilk());
 
         MonthlyMilk oldMonthlyMilk = createValidWithMonthPriceMonthlyMilk();
         MonthlyMilk updatedMonthlyMilk = monthlyMilkService.updatePriceMonthMilkAndSum(12, 2022, 2.80D);
