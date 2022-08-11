@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -59,8 +58,8 @@ public class MilkService {
 
     }
 
-    public void replace(MilkPutRequestBody milkPutRequestBody) {
-        milkRepository.save(MilkMapper.INSTANCE.milkPutRequestBodyToMilk(milkPutRequestBody));
+    public Milk replace(MilkPutRequestBody milkPutRequestBody) {
+        return milkRepository.save(MilkMapper.INSTANCE.milkPutRequestBodyToMilk(milkPutRequestBody));
     }
 
     public void delete(Long id) {
@@ -78,13 +77,12 @@ public class MilkService {
     }
 
     public List<Milk> findMilkListByDayYearAndMonth(String date) {
-        try {
-            LocalDate localDate = DateUtil.convertStringToLocalDate(date);
+        LocalDate localDate = DateUtil.convertStringToLocalDate(date);
+        if (localDate != null) {
             return milkRepository.findByDate(localDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
         return Collections.emptyList();
+
     }
 
 }

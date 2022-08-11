@@ -4,6 +4,7 @@ import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
 import com.bruno.springmyproject.entity.enums.PeriodTime;
 import com.bruno.springmyproject.request.MilkPostRequestBody;
+import com.bruno.springmyproject.request.MilkPutRequestBody;
 
 import java.time.LocalDate;
 
@@ -27,7 +28,7 @@ public class MilkCreator {
 
         return Milk.builder()
                 .monthlyMilk(monthlyMilk)
-                .date(LocalDate.of(2022,12,10))
+                .date(LocalDate.of(2022, 12, 10))
                 .periodTime(PeriodTime.MANHA)
                 .quantity(120D)
                 .id(1L)
@@ -39,6 +40,14 @@ public class MilkCreator {
                 .date(LocalDate.now())
                 .periodTime(PeriodTime.MANHA)
                 .quantity(120D)
+                .build();
+    }
+
+    public static MilkPutRequestBody createValidMilkPutRequestBody() {
+        return MilkPutRequestBody.builder()
+                .id(1L)
+                .periodTime(PeriodTime.MANHA)
+                .quantity(240D)
                 .build();
     }
 

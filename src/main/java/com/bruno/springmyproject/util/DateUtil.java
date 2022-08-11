@@ -12,12 +12,18 @@ public class DateUtil {
         throw new IllegalStateException("Util class");
     }
 
-    public static LocalDate convertStringToLocalDate(String date) throws ParseException {
+    public static LocalDate convertStringToLocalDate(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String formattedString = date.substring(0, 2) + "/" +
                 date.substring(2, 4) + "/" +
                 date.substring(4, 8);
-        Date parsedDate = sdf.parse(formattedString);
-        return parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Date parsedDate = null;
+        try {
+            parsedDate = sdf.parse(formattedString);
+            return parsedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
