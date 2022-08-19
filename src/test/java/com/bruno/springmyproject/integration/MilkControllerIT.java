@@ -3,6 +3,7 @@ package com.bruno.springmyproject.integration;
 
 import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.repository.MilkRepository;
+import com.bruno.springmyproject.request.MilkPostRequestBody;
 import com.bruno.springmyproject.util.BasicAuthHeaders;
 import com.bruno.springmyproject.util.MilkCreator;
 import lombok.extern.log4j.Log4j2;
@@ -80,25 +81,82 @@ class MilkControllerIT {
     @Test
     @DisplayName("save milk when successful")
     void save_SaveMilk_WhenSuccessful() {
-        Milk milk = MilkCreator.createValidMilk();
+        MilkPostRequestBody milkPostRequestBody = MilkCreator.createValidMilkPostRequestBody();
 
-        ResponseEntity<Milk> responseMilk = testRestTemplate.exchange("/v1/milk", HttpMethod.POST, new HttpEntity<>(milk, BasicAuthHeaders.createHeaders("admin", "senha")), Milk.class);
+        ResponseEntity<Milk> responseMilk = testRestTemplate.exchange("/v1/milk", HttpMethod.POST, new HttpEntity<>(milkPostRequestBody, BasicAuthHeaders.createHeaders("admin", "senha")), Milk.class);
 
         Milk savedMilk = responseMilk.getBody();
 
         Assertions.assertThat(savedMilk)
-                .isNotNull()
-                .isEqualTo(milk);
-
+                .isNotNull();
         Assertions.assertThat(savedMilk.getId())
-                .isNotNull()
-                .isEqualTo(milk.getId());
-
+                .isNotNull();
         Assertions.assertThat(responseMilk.getStatusCode())
                 .isEqualTo(HttpStatus.CREATED);
 
     }
-
+//
+//    @Test
+//    @DisplayName("replace update milk when successful")
+//    void replace_UpdateMilk_WhenSuccessful() {
+//        Assertions.assertThatCode(() -> milkController.replace(MilkCreator.createValidMilkPutRequestBody()))
+//                .doesNotThrowAnyException();
+//
+//        ResponseEntity<Void> body = milkController.replace(MilkCreator.createValidMilkPutRequestBody());
+//
+//        Assertions.assertThat(body)
+//                .isNotNull();
+//        Assertions.assertThat(body.getStatusCode())
+//                .isEqualTo(HttpStatus.NO_CONTENT);
+//    }
+//
+//    @Test
+//    @DisplayName("delete removes milk when successful")
+//    void delete_RemovesMilk_WhenSuccessful() {
+//        Assertions.assertThatCode(() -> milkController.delete(1L))
+//                .doesNotThrowAnyException();
+//
+//        ResponseEntity<Void> body = milkController.delete(1L);
+//
+//        Assertions.assertThat(body)
+//                .isNotNull();
+//        Assertions.assertThat(body.getStatusCode())
+//                .isEqualTo(HttpStatus.NO_CONTENT);
+//    }
+//
+//    @Test
+//    @DisplayName("findByYearAndMonth returns milk list when successful")
+//    void findByYearAndMonth_ReturnsMilkList_WhenSuccessful() {
+//        Milk milk = MilkCreator.createValidMilkWithMonthlyMilk();
+//        List<Milk> body = milkController.findByYearAndMonth(12, 2022).getBody();
+//
+//        Assertions.assertThat(body)
+//                .isNotNull()
+//                .isNotEmpty()
+//                .hasSize(1)
+//                .containsOnly(milk);
+//        Assertions.assertThat(body.get(0).getId())
+//                .isNotNull()
+//                .isEqualTo(milk.getId());
+//
+//    }
+//
+//    @Test
+//    @DisplayName("findByDayYearAndMonth returns milk list when successful")
+//    void findByDayYearAndMonth_ReturnsMilkList_WhenSuccessful() {
+//        Milk milk = MilkCreator.createValidMilkWithMonthlyMilk();
+//        List<Milk> body = milkController.findByDayYearAndMonth("12042022").getBody();
+//
+//        Assertions.assertThat(body)
+//                .isNotNull()
+//                .isNotEmpty()
+//                .hasSize(1)
+//                .containsOnly(milk);
+//        Assertions.assertThat(body.get(0).getId())
+//                .isNotNull()
+//                .isEqualTo(milk.getId());
+//
+//    }
 
 
 }
