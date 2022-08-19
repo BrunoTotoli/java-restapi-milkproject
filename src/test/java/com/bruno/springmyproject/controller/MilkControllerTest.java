@@ -9,19 +9,18 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(SpringExtension.class)
 @DisplayName("Milk Controller Tests")
 class MilkControllerTest {
 
@@ -78,7 +77,7 @@ class MilkControllerTest {
 
     @Test
     @DisplayName("save milk when successful")
-    void save_SaveMilk_WhenSuccessful (){
+    void save_SaveMilk_WhenSuccessful() {
         Milk milk = MilkCreator.createValidMilk();
         Milk bodyMilk = milkController.save(MilkCreator.createValidMilkPostRequestBody()).getBody();
 
