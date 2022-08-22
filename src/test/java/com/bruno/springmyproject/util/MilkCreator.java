@@ -20,6 +20,16 @@ public class MilkCreator {
                 .build();
     }
 
+    public static Milk createValidMilkWithStaticDate() {
+        return Milk.builder()
+                .monthlyMilk(null)
+                .date(LocalDate.of(2022, 12, 10))
+                .periodTime(PeriodTime.MANHA)
+                .quantity(120D)
+                .id(1L)
+                .build();
+    }
+
     public static Milk createValidMilkWithMonthlyMilk() {
         MonthlyMilk monthlyMilk = new MonthlyMilk();
         monthlyMilk.setMilkMonth(12);

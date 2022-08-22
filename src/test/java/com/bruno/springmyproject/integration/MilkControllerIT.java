@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -95,68 +96,81 @@ class MilkControllerIT {
                 .isEqualTo(HttpStatus.CREATED);
 
     }
-//
-//    @Test
-//    @DisplayName("replace update milk when successful")
-//    void replace_UpdateMilk_WhenSuccessful() {
-//        Assertions.assertThatCode(() -> milkController.replace(MilkCreator.createValidMilkPutRequestBody()))
-//                .doesNotThrowAnyException();
-//
-//        ResponseEntity<Void> body = milkController.replace(MilkCreator.createValidMilkPutRequestBody());
-//
-//        Assertions.assertThat(body)
-//                .isNotNull();
-//        Assertions.assertThat(body.getStatusCode())
-//                .isEqualTo(HttpStatus.NO_CONTENT);
-//    }
-//
-//    @Test
-//    @DisplayName("delete removes milk when successful")
-//    void delete_RemovesMilk_WhenSuccessful() {
-//        Assertions.assertThatCode(() -> milkController.delete(1L))
-//                .doesNotThrowAnyException();
-//
-//        ResponseEntity<Void> body = milkController.delete(1L);
-//
-//        Assertions.assertThat(body)
-//                .isNotNull();
-//        Assertions.assertThat(body.getStatusCode())
-//                .isEqualTo(HttpStatus.NO_CONTENT);
-//    }
-//
-//    @Test
-//    @DisplayName("findByYearAndMonth returns milk list when successful")
-//    void findByYearAndMonth_ReturnsMilkList_WhenSuccessful() {
-//        Milk milk = MilkCreator.createValidMilkWithMonthlyMilk();
-//        List<Milk> body = milkController.findByYearAndMonth(12, 2022).getBody();
-//
-//        Assertions.assertThat(body)
-//                .isNotNull()
-//                .isNotEmpty()
-//                .hasSize(1)
-//                .containsOnly(milk);
-//        Assertions.assertThat(body.get(0).getId())
-//                .isNotNull()
-//                .isEqualTo(milk.getId());
-//
-//    }
-//
-//    @Test
-//    @DisplayName("findByDayYearAndMonth returns milk list when successful")
-//    void findByDayYearAndMonth_ReturnsMilkList_WhenSuccessful() {
-//        Milk milk = MilkCreator.createValidMilkWithMonthlyMilk();
-//        List<Milk> body = milkController.findByDayYearAndMonth("12042022").getBody();
-//
-//        Assertions.assertThat(body)
-//                .isNotNull()
-//                .isNotEmpty()
-//                .hasSize(1)
-//                .containsOnly(milk);
-//        Assertions.assertThat(body.get(0).getId())
-//                .isNotNull()
-//                .isEqualTo(milk.getId());
-//
-//    }
+
+    @Test
+    @DisplayName("replace update milk when successful")
+    void replace_UpdateMilk_WhenSuccessful() {
+        Milk savedMilk = milkRepository.save(MilkCreator.createValidMilk());
+        savedMilk.setQuantity(2000D);
+
+
+        ResponseEntity<Void> response = testRestTemplate.exchange("/v1/milk", HttpMethod.PUT, new HttpEntity<>(savedMilk, BasicAuthHeaders.createHeaders("admin", "senha")), Void.class);
+
+        Assertions.assertThat(response)
+                .isNotNull();
+        Assertions.assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("delete removes milk when successful")
+    void delete_RemovesMilk_WhenSuccessful() {
+        Milk savedMilk = milkRepository.save(MilkCreator.createValidMilk());
+
+        ResponseEntity<Void> response = testRestTemplate.exchange("/v1/milk/{id}", HttpMethod.DELETE, httpEntityWithBasicAuth, Void.class, savedMilk.getId());
+
+        Assertions.assertThat(response)
+                .isNotNull();
+        Assertions.assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("findByYearAndMonth returns milk list when successful")
+    void findByYearAndMonth_ReturnsMilkList_WhenSuccessful() {
+        Milk savedMilk = milkRepository.save(MilkCreator.createValidMilk());
+
+        ResponseEntity<List<Milk>> response = testRestTemplate.exchange("/v1/milk/date?month={month}&year={year}", HttpMethod.GET, httpEntityWithBasicAuth, new ParameterizedTypeReference<List<Milk>>() {
+        }, LocalDate.now().getMonth().getValue(), LocalDate.now().getYear());
+
+        List<Milk> milkList = response.getBody();
+
+        Assertions.assertThat(milkList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .containsOnly(savedMilk);
+        Assertions.assertThat(milkList.get(0).getId())
+                .isNotNull()
+                .isEqualTo(savedMilk.getId());
+        Assertions.assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+    }
+
+    @Test
+    @DisplayName("findByDayYearAndMonth returns milk list when successful")
+    void findByDayYearAndMonth_ReturnsMilkList_WhenSuccessful() {
+        Milk savedMilk = milkRepository.save(MilkCreator.createValidMilkWithStaticDate());
+
+        ResponseEntity<List<Milk>> response = testRestTemplate.exchange("/v1/milk/fulldate?date={date}", HttpMethod.GET, httpEntityWithBasicAuth, new ParameterizedTypeReference<List<Milk>>() {
+        }, "10122022");
+
+        List<Milk> milkList = response.getBody();
+
+        Assertions.assertThat(milkList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1)
+                .containsOnly(savedMilk);
+        Assertions.assertThat(milkList.get(0).getId())
+                .isNotNull()
+                .isEqualTo(savedMilk.getId());
+        Assertions.assertThat(response.getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+
+    }
 
 
 }
