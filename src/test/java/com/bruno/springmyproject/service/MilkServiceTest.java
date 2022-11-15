@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,8 +61,13 @@ class MilkServiceTest {
     @Test
     @DisplayName("save milk and link a monthly milk created returns milk when successful")
     void saveMilk_ReturnsMilkLinkedAMonthlyMilkCreated_WhenSuccessful() {
+
+        Mockito.when(monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt()))
+                .thenReturn(null);
+
         Milk unsavedMilk = MilkMapper.INSTANCE
                 .milkPostRequestBodyToMilk(createValidMilkPostRequestBody());
+
         Milk savedMilk = milkService.save(createValidMilkPostRequestBody());
 
         Assertions.assertThat(savedMilk)
@@ -221,8 +227,11 @@ class MilkServiceTest {
     @Test
     @DisplayName("findMilkListByDayYearAndMonthUsingString returns empty milk list when successful")
     void findMilkListByDayYearAndMonth_ReturnsEmptyMilkList_WhenSuccessful() {
+        Mockito.when(milkRepository.findByDate(ArgumentMatchers.any()))
+                .thenReturn(Collections.emptyList());
+
         Milk milk = createValidMilk();
-        List<Milk> milkList = milkService.findMilkListByDayYearAndMonth("10/10/2022");
+        List<Milk> milkList = milkService.findMilkListByDayYearAndMonth("10102022");
 
         Assertions.assertThat(milkList).isEmpty();
     }

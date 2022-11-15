@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,7 +76,8 @@ public class MilkService {
 
     public List<Milk> findMilkListByMonthAndYear(int month, int year) {
         LocalDate localDateStart = LocalDate.of(year, month, 1);
-        LocalDate localDateEnd = LocalDate.of(year, month, 31);
+        LocalDate localDateEnd = LocalDate.of(year, month, LocalDate.now()
+                .with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth());
         return milkRepository.findByDateBetween(localDateStart, localDateEnd);
     }
 

@@ -60,6 +60,5 @@ public class MilkCreator {
                 .quantity(240D)
                 .build();
     }
-
-
 }
+
