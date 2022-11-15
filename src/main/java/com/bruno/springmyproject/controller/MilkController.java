@@ -2,14 +2,21 @@ package com.bruno.springmyproject.controller;
 
 
 import com.bruno.springmyproject.entity.Milk;
+import com.bruno.springmyproject.pdf.MilkPDFExporter;
 import com.bruno.springmyproject.request.MilkPostRequestBody;
 import com.bruno.springmyproject.request.MilkPutRequestBody;
 import com.bruno.springmyproject.service.MilkService;
+import com.lowagie.text.DocumentException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -54,6 +61,22 @@ public class MilkController {
     @GetMapping("/fulldate")
     public ResponseEntity<List<Milk>> findByDayYearAndMonth(@RequestParam String date) {
         return ResponseEntity.ok().body(milkService.findMilkListByDayYearAndMonth(date));
+    }
+
+    @GetMapping("/pdf")
+    public void exportToPDF(HttpServletResponse response) throws DocumentException, IOException {
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=milk_list_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+
+        List<Milk> listMilks = milkService.findAll();
+
+        MilkPDFExporter exporter = new MilkPDFExporter(listMilks);
+        exporter.export(response);
     }
 
 }
