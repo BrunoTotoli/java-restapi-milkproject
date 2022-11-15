@@ -2,6 +2,7 @@ package com.bruno.springmyproject.handler;
 
 
 import com.bruno.springmyproject.exception.ExceptionDetails;
+import com.bruno.springmyproject.exception.MilkDateNotValidException;
 import com.bruno.springmyproject.exception.MilkNotFoundException;
 import com.bruno.springmyproject.util.ConstraintViolationsToString;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,17 @@ public class GlobalControllerExceptionHandler {
                 .title("Invalid Fields")
                 .errorMessage(ConstraintViolationsToString.formatConstraintViolationsToString(constraintViolationException.getConstraintViolations()))
                 .errorClass(constraintViolationException.getClass().getName())
+                .build(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MilkDateNotValidException.class)
+    public ResponseEntity<ExceptionDetails> handleMilkDateNotExistsException(MilkDateNotValidException milkDateNotValidException) {
+        return new ResponseEntity<>(ExceptionDetails.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .title("Invalid Date")
+                .errorMessage(milkDateNotValidException.getMessage())
+                .errorClass(milkDateNotValidException.getClass().getName())
                 .build(), HttpStatus.BAD_REQUEST);
     }
 

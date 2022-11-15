@@ -2,6 +2,7 @@ package com.bruno.springmyproject.service;
 
 import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
+import com.bruno.springmyproject.exception.MilkDateNotValidException;
 import com.bruno.springmyproject.exception.MilkNotFoundException;
 import com.bruno.springmyproject.mapper.MilkMapper;
 import com.bruno.springmyproject.repository.MilkRepository;
@@ -30,19 +31,19 @@ public class MilkService {
         Milk milkToBeSaved = MilkMapper.INSTANCE.milkPostRequestBodyToMilk(milkPostRequestBody);
 
         if (milkToBeSaved.getDate() != null) {
+            if (milkToBeSaved.getDate().isAfter(LocalDate.now())) {
+                throw new MilkDateNotValidException("This Date is after today " + LocalDate.now());
+            }
             int month = milkToBeSaved.getDate().getMonth().getValue();
             int year = milkToBeSaved.getDate().getYear();
             MonthlyMilk monthly = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
 
-            if (monthly != null)
-                milkToBeSaved.setMonthlyMilk(monthly);
-            else
-                monthly = new MonthlyMilk(null, month, year, null, null, null, null);
+            if (monthly != null) milkToBeSaved.setMonthlyMilk(monthly);
+            else monthly = new MonthlyMilk(null, month, year, null, null, null, null);
 
             if (monthly.getAllMilkQuantityInMonth() == null)
                 monthly.setAllMilkQuantityInMonth(milkToBeSaved.getQuantity());
-            else
-                monthly.setAllMilkQuantityInMonth(monthly.getAllMilkQuantityInMonth() + milkToBeSaved.getQuantity());
+            else monthly.setAllMilkQuantityInMonth(monthly.getAllMilkQuantityInMonth() + milkToBeSaved.getQuantity());
             if (monthly.getMilkMonthPrice() != null) {
                 monthly.setAllMilkQuantityInMonthPriceValue(monthly.getAllMilkQuantityInMonthPriceValue() + (milkToBeSaved.getQuantity() * monthly.getMilkMonthPrice()));
             }
@@ -56,8 +57,7 @@ public class MilkService {
     }
 
     public Milk findByIdOrElseThrowMilkNotFoundException(Long id) {
-        return milkRepository.findById(id)
-                .orElseThrow(() -> new MilkNotFoundException("Milk not found"));
+        return milkRepository.findById(id).orElseThrow(() -> new MilkNotFoundException("Milk not found"));
 
     }
 
