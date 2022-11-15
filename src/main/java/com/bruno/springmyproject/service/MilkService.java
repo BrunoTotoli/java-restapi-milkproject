@@ -43,6 +43,9 @@ public class MilkService {
                 monthly.setAllMilkQuantityInMonth(milkToBeSaved.getQuantity());
             else
                 monthly.setAllMilkQuantityInMonth(monthly.getAllMilkQuantityInMonth() + milkToBeSaved.getQuantity());
+            if (monthly.getMilkMonthPrice() != null) {
+                monthly.setAllMilkQuantityInMonthPriceValue(monthly.getAllMilkQuantityInMonthPriceValue() + (milkToBeSaved.getQuantity() * monthly.getMilkMonthPrice()));
+            }
 
 
             monthlyMilkRepository.save(monthly);
