@@ -8,6 +8,7 @@ import com.bruno.springmyproject.request.MilkPutRequestBody;
 import com.bruno.springmyproject.service.MilkService;
 import com.lowagie.text.DocumentException;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("v1/milk")
+@Log4j2
 public class MilkController {
 
     private MilkService milkService;
@@ -73,7 +78,10 @@ public class MilkController {
         String headerValue = "attachment; filename=milk_list_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
-        List<Milk> listMilks = milkService.findAll();
+        List<Milk> listMilks = milkService.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Milk::getDate))
+                .collect(Collectors.toList());
 
         MilkPDFExporter exporter = new MilkPDFExporter(listMilks);
         exporter.export(response);
