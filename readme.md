@@ -6,6 +6,8 @@ To run this projects you need:
 
 - JDK 17
  
+**git clone https://github.com/BrunoTotoli/java-restapi-milkproject.git**
+ 
 **Write in console docker compose up to run database**
 
 **And run SpringMyProjectApplication**
