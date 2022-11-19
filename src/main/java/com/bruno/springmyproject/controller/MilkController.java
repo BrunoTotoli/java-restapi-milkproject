@@ -6,7 +6,6 @@ import com.bruno.springmyproject.pdf.MilkPDFExporter;
 import com.bruno.springmyproject.request.MilkPostRequestBody;
 import com.bruno.springmyproject.request.MilkPutRequestBody;
 import com.bruno.springmyproject.service.MilkService;
-import com.lowagie.text.DocumentException;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -14,14 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -69,7 +65,7 @@ public class MilkController {
     }
 
     @GetMapping("/pdf")
-    public void exportToPDF(HttpServletResponse response) throws DocumentException, IOException {
+    public void exportToPDF(HttpServletResponse response) {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -81,10 +77,10 @@ public class MilkController {
         List<Milk> listMilks = milkService.findAll()
                 .stream()
                 .sorted(Comparator.comparing(Milk::getDate))
-                .collect(Collectors.toList());
+                .toList();
 
-        MilkPDFExporter exporter = new MilkPDFExporter(listMilks);
-        exporter.export(response);
+        MilkPDFExporter exporter = new MilkPDFExporter();
+        exporter.export(response, listMilks);
     }
 
 }

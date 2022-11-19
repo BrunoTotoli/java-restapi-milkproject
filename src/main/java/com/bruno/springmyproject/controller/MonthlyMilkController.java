@@ -1,25 +1,19 @@
 package com.bruno.springmyproject.controller;
 
 
-import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
-import com.bruno.springmyproject.pdf.MilkPDFExporter;
 import com.bruno.springmyproject.pdf.MonthlyMilkPDFExporter;
 import com.bruno.springmyproject.service.MonthlyMilkService;
-import com.lowagie.text.DocumentException;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -55,7 +49,7 @@ public class MonthlyMilkController {
     }
 
     @GetMapping("/pdf")
-    public void exportToPDF(HttpServletResponse response, @RequestParam Integer month, @RequestParam Integer year) throws DocumentException, IOException {
+    public void exportToPDF(HttpServletResponse response, @RequestParam Integer month, @RequestParam Integer year){
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -67,8 +61,8 @@ public class MonthlyMilkController {
         MonthlyMilk monthlyMilk = monthlyMilkService.findMonthlyMilkByMonthAndYear(month, year);
 
 
-        MonthlyMilkPDFExporter exporter = new MonthlyMilkPDFExporter(monthlyMilk);
-        exporter.export(response, month, year);
+        MonthlyMilkPDFExporter exporter = new MonthlyMilkPDFExporter();
+        exporter.export(response, month, year, monthlyMilk);
     }
 
 
