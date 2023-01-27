@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class MonthlyMilkService {
         return monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
     }
 
+    @Transactional(rollbackOn = Exception.class)
     public MonthlyMilk savePriceMonthMilkAndSum(int month, int year, Double priceMonthMilk) {
         MonthlyMilk monthlyMilk = monthlyMilkRepository.findMonthlyMilkByMilkMonthAndMilkYear(month, year);
         if (monthlyMilk.getMilkMonthPrice() == null) {

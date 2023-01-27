@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class MilkService {
     private MilkRepository milkRepository;
     private MonthlyMilkRepository monthlyMilkRepository;
 
+    @Transactional(rollbackOn = Exception.class)
     public Milk save(MilkPostRequestBody milkPostRequestBody) {
 
         Milk milkToBeSaved = MilkMapper.INSTANCE.milkPostRequestBodyToMilk(milkPostRequestBody);

@@ -49,7 +49,7 @@ public class MonthlyMilkController {
     }
 
     @GetMapping("/pdf")
-    public void exportToPDF(HttpServletResponse response, @RequestParam Integer month, @RequestParam Integer year){
+    public void exportToPDF(HttpServletResponse response, @RequestParam Integer month, @RequestParam Integer year) {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -62,7 +62,7 @@ public class MonthlyMilkController {
 
 
         MonthlyMilkPDFExporter exporter = new MonthlyMilkPDFExporter();
-        exporter.export(response, month, year, monthlyMilk);
+        exporter.export(response, monthlyMilk);
     }
 
 
