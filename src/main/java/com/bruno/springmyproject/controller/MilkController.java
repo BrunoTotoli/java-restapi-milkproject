@@ -27,7 +27,7 @@ public class MilkController {
 
     private MilkService milkService;
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<Milk>> findAll() {
         return new ResponseEntity<>(milkService.findAll(), HttpStatus.OK);
     }

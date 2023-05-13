@@ -29,7 +29,7 @@ public class MonthlyMilkController {
         return ResponseEntity.ok().body(monthlyMilkService.findById(id));
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<MonthlyMilk>> findAll() {
         return ResponseEntity.ok().body(monthlyMilkService.findAll());
     }
