@@ -3,8 +3,11 @@ package com.bruno.springmyproject.config;
 import com.bruno.springmyproject.entity.Milk;
 import com.bruno.springmyproject.entity.MonthlyMilk;
 import com.bruno.springmyproject.entity.enums.PeriodTime;
+import com.bruno.springmyproject.mapper.MilkMapper;
 import com.bruno.springmyproject.repository.MilkRepository;
 import com.bruno.springmyproject.repository.MonthlyMilkRepository;
+import com.bruno.springmyproject.request.MilkPostRequestBody;
+import com.bruno.springmyproject.service.MilkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +20,7 @@ import java.util.List;
 public class MilkCommandLineRunner implements CommandLineRunner {
 
     @Autowired
-    MilkRepository milkRepository;
+    MilkService milkService;
 
     @Autowired
     MonthlyMilkRepository monthlyMilkRepository;
@@ -25,31 +28,30 @@ public class MilkCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        insertAllData();
+        insertAllData();
     }
 
     private void insertAllData() {
-        MonthlyMilk monthlyMilk7 = new MonthlyMilk(null, 7, 2022, 2D, null, null, null);
-        MonthlyMilk monthlyMilk8 = new MonthlyMilk(null, 8, 2022, 3D, null, null, null);
-        monthlyMilkRepository.save(monthlyMilk7);
-        monthlyMilkRepository.save(monthlyMilk8);
-        List<Milk> milksToBeSave = createFullDaysMonthWithRandomQuantities(7, 2022, monthlyMilk7);
-        List<Milk> milksToBeSave2 = createFullDaysMonthWithRandomQuantities(8, 2022, monthlyMilk8);
-        milkRepository.saveAll(milksToBeSave);
-        milkRepository.saveAll(milksToBeSave2);
+        List<MilkPostRequestBody> milksToBeSave = createFullDaysMonthWithRandomQuantities(7, 2022, null);
+        List<MilkPostRequestBody> milksToBeSave2 = createFullDaysMonthWithRandomQuantities(8, 2022, null);
+        for (int i = 0; i < milksToBeSave.size(); i++) {
+            milkService.save(milksToBeSave.get(i));
+        }
+        for (int i = 0; i < milksToBeSave2.size(); i++) {
+            milkService.save(milksToBeSave2.get(i));
+        }
     }
 
 
-    private List<Milk> createFullDaysMonthWithRandomQuantities(int month, int year, MonthlyMilk monthlyMilk) {
-        List<Milk> milkList = new ArrayList<>();
+    private List<MilkPostRequestBody> createFullDaysMonthWithRandomQuantities(int month, int year, MonthlyMilk monthlyMilk) {
+        List<MilkPostRequestBody> milkList = new ArrayList<>();
         for (int i = 1; i <= 31; i++) {
-            Milk buildMilk =
-                    Milk.builder()
+            MilkPostRequestBody buildMilk =
+                    MilkPostRequestBody.builder()
                             .quantity(getRandomNumber(80, 140)
                                     .doubleValue())
                             .periodTime(PeriodTime.MANHA)
                             .date(LocalDate.of(year, month, i))
-                            .monthlyMilk(monthlyMilk)
                             .build();
             milkList.add(buildMilk);
         }

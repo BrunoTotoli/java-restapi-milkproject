@@ -64,6 +64,8 @@ public class MilkController {
         return ResponseEntity.ok().body(milkService.findMilkListByDayYearAndMonth(date));
     }
 
+
+
     @GetMapping("/pdf")
     public void exportToPDF(HttpServletResponse response) {
         response.setContentType("application/pdf");

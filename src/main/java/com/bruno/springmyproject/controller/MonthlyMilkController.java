@@ -6,6 +6,7 @@ import com.bruno.springmyproject.pdf.MonthlyMilkPDFExporter;
 import com.bruno.springmyproject.service.MonthlyMilkService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,12 @@ public class MonthlyMilkController {
     @PutMapping("/price")
     public ResponseEntity<MonthlyMilk> updateMonthMilkPrice(@RequestParam Integer month, @RequestParam Integer year, @RequestParam Double price) {
         return ResponseEntity.ok().body(monthlyMilkService.updatePriceMonthMilkAndSum(month, year, price));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        monthlyMilkService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/pdf")

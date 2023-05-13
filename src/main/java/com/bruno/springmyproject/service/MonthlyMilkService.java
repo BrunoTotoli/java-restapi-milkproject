@@ -52,4 +52,8 @@ public class MonthlyMilkService {
         }
         throw new IllegalStateException("MilkMonthPrice is null");
     }
+
+    public void delete(Long id) {
+        monthlyMilkRepository.deleteById(id);
+    }
 }
