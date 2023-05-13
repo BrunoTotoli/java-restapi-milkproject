@@ -1,3 +1,42 @@
+# About This Project # 
+
+[![NPM](https://img.shields.io/npm/l/react)](https://github.com/devsuperior/sds1-wmazoni/blob/master/LICENSE) 
+
+
+This project was created according to the needs of a farm.
+
+The project will manage the milk production, and make monthly reports about the production.
+
+When sending the post method
+
+{
+  "date": "2023-05-13",
+  "periodTime": "MANHA",
+  "quantity": 0
+}
+
+The system automatically creates monthlyMilk linked to milk, Every new registration the monthly is updated
+
+At the end of the month, the user should make a post telling the value of each liter of milk
+
+http://localhost:8080/v1/monthly/price?month=05&year=2023&price=4
+HTTP POST METHOD
+
+The system will automatically calculate what the monthly income of the property will be.
+
+After the system has updated everything, the client can download a pdf file with the records.
+
+http://localhost:8080/v1/monthly/pdf
+
+To run any endpoint you will need basic auth, The data is in the security config below
+
+
+
+
+
+
+
+
 ## Entity UML
 ![UML](https://github.com/BrunoTotoli/Assets/blob/35ba7b290c1bb27c5fff646f2ad063aae692a7dc/MonthlyMilk1.png)
 
@@ -16,9 +55,13 @@ To run this projects you need:
  
 **git clone https://github.com/BrunoTotoli/java-restapi-milkproject.git**
  
-**Write in console docker compose up to run database**
+**Write in terminal 'docker compose up' to run database**
 
-**And run SpringMyProjectApplication**
+**And 'mvn spring-boot:run' to run the project**
+
+Once executed, you can access the documentation
+
+http://localhost:8080/swagger-ui/
 
 
 ## Security Configs
