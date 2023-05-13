@@ -1,3 +1,11 @@
+## Entity UML
+![UML](https://github.com/BrunoTotoli/Assets/blob/35ba7b290c1bb27c5fff646f2ad063aae692a7dc/MonthlyMilk1.png)
+
+
+## DTO UML
+![DTOUML](https://github.com/BrunoTotoli/Assets/blob/35ba7b290c1bb27c5fff646f2ad063aae692a7dc/MilkPostRequestBody1.png)
+
+
 ## Running
 
 To run this projects you need:
@@ -51,8 +59,11 @@ Password:senhauser
 [H2 Database](https://www.h2database.com/html/main.html)
 
 
+## Author
 
+Bruno Totoli
 
+https://www.linkedin.com/in/bruno-totoli-36331a178/
 
 
 
