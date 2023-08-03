@@ -18,6 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                 .and().csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/v1/monthly/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
